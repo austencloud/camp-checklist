@@ -10,7 +10,8 @@
 		addChecklistItem,
 		toggleChecklistItemCompleted,
 		deleteCategory,
-		deleteChecklistItem
+		deleteChecklistItem,
+		reorderChecklistItems
 	} = $props<{
 		categories: CategoryType[];
 		addCategory: (name: string) => void;
@@ -18,6 +19,7 @@
 		toggleChecklistItemCompleted: (itemId: string) => void;
 		deleteCategory: (categoryId: string) => void;
 		deleteChecklistItem: (categoryId: string, itemId: string, parentItemId?: string) => void;
+		reorderChecklistItems: (categoryId: string, oldIndex: number, newIndex: number) => void;
 	}>();
 
 	// Methods
@@ -45,6 +47,7 @@
 						{toggleChecklistItemCompleted}
 						{deleteCategory}
 						{deleteChecklistItem}
+						{reorderChecklistItems}
 					/>
 				</div>
 			{/each}

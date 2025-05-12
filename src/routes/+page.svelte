@@ -142,6 +142,24 @@
 			todo.completed = !todo.completed;
 		}
 	}
+
+	// Function to reorder checklist items within a category
+	function reorderChecklistItems(categoryId: string, oldIndex: number, newIndex: number) {
+		const category = categories.find((cat) => cat.id === categoryId);
+		if (!category) return;
+
+		// Get the item to move
+		const itemToMove = category.items[oldIndex];
+		if (!itemToMove) return;
+
+		// Remove the item from its old position
+		category.items.splice(oldIndex, 1);
+
+		// Insert the item at its new position
+		category.items.splice(newIndex, 0, itemToMove);
+
+		// The effect will automatically save to localStorage
+	}
 </script>
 
 <div class="app-layout">
@@ -161,6 +179,7 @@
 			{toggleChecklistItemCompleted}
 			{deleteCategory}
 			{deleteChecklistItem}
+			{reorderChecklistItems}
 		/>
 	</main>
 

@@ -68,6 +68,7 @@
 		"svelte"
 	],
 	"dependencies": {
+		"firebase": "^11.7.1",
 		"uuid": "^11.1.0"
 	}
 }
