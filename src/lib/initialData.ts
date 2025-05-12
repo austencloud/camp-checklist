@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 export const initialCategories: Category[] = [
   {
     id: uuidv4(),
-    name: 'Kinetic Alphabet Supplies',
+    name: 'TKA',
     items: [
       // { id: uuidv4(), text: "Letter A materials", completed: false }, // Example
     ]

@@ -63,7 +63,7 @@
 
 	.form-input {
 		flex-grow: 1;
-		padding: var(--spacing-2) var(--spacing-3);
+		padding: var(--spacing-3) var(--container-spacing);
 		border-radius: var(--border-radius-md);
 		border: 1px solid var(--color-border);
 		background-color: var(--color-surface);
@@ -71,6 +71,10 @@
 		transition:
 			border-color var(--transition-duration-fast) var(--transition-timing-default),
 			box-shadow var(--transition-duration-fast) var(--transition-timing-default);
+		font-size: var(--font-size-base); /* Use fluid font size */
+		min-height: var(--touch-target-size); /* Fluid touch target height */
+		min-width: 0; /* Ensure input can shrink */
+		width: 100%; /* Take full width */
 	}
 
 	.form-input:focus {
@@ -84,7 +88,7 @@
 	}
 
 	.submit-button {
-		padding: var(--spacing-2) var(--spacing-4);
+		padding: var(--spacing-3) var(--container-spacing);
 		background-color: var(--color-primary-600);
 		color: white;
 		border: none;
@@ -94,6 +98,11 @@
 			background-color var(--transition-duration-fast) var(--transition-timing-default),
 			transform var(--transition-duration-fast) var(--transition-timing-default),
 			box-shadow var(--transition-duration-fast) var(--transition-timing-default);
+		min-height: var(--touch-target-size); /* Fluid touch target height */
+		min-width: var(--touch-target-size); /* Fluid touch target width */
+		touch-action: manipulation; /* Prevent double-tap zoom on mobile */
+		flex-shrink: 0; /* Prevent shrinking */
+		white-space: nowrap; /* Prevent text wrapping */
 	}
 
 	.submit-button:hover {
@@ -104,10 +113,37 @@
 
 	.submit-button:active {
 		transform: translateY(0);
+		background-color: var(--color-primary-800); /* Darker color for touch feedback */
 	}
 
 	.submit-button:focus-visible {
 		outline: 2px solid var(--color-primary-500);
 		outline-offset: 2px;
+	}
+
+	/* Dark mode adjustments */
+	:global([data-theme='dark']) .form-input {
+		border-color: var(--color-neutral-600); /* More visible border */
+		background-color: var(--color-neutral-900); /* Darker background for better contrast */
+	}
+
+	:global([data-theme='dark']) .form-input:focus {
+		border-color: var(--color-primary-400); /* Brighter border when focused */
+		box-shadow: 0 0 0 1px var(--color-primary-400);
+	}
+
+	:global([data-theme='dark']) .form-input::placeholder {
+		color: var(--color-text-secondary); /* More visible placeholder text */
+	}
+
+	:global([data-theme='dark']) .submit-button {
+		background-color: var(--color-primary-500); /* Brighter button in dark mode */
+	}
+
+	/* We're using a fluid design approach instead of fixed breakpoints */
+	/* The component will automatically adapt to any screen width */
+
+	:global([data-theme='dark']) .submit-button:hover {
+		background-color: var(--color-primary-400); /* Even brighter on hover */
 	}
 </style>

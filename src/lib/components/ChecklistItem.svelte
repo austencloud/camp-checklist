@@ -1,6 +1,7 @@
 <script lang="ts">
 	import type { ChecklistItem } from '../types.js';
 	import AddItemForm from './AddItemForm.svelte';
+	import DeleteButton from './DeleteButton.svelte';
 	// Self-import for recursive rendering (replacing svelte:self)
 	import Self from './ChecklistItem.svelte';
 
@@ -10,6 +11,7 @@
 		categoryId,
 		toggleChecklistItemCompleted,
 		addChecklistItem,
+		deleteItem,
 		level = 0,
 		showAddSubItem = false
 	} = $props<{
@@ -17,6 +19,7 @@
 		categoryId: string;
 		toggleChecklistItemCompleted: (itemId: string) => void;
 		addChecklistItem: (categoryId: string, text: string, parentItemId?: string) => void;
+		deleteItem: (itemId: string, parentItemId?: string) => void;
 		level?: number;
 		showAddSubItem?: boolean;
 	}>();
@@ -37,6 +40,10 @@
 	function handleAddSubItemClick() {
 		isAddingSubItem = true;
 	}
+
+	function handleDeleteItem() {
+		deleteItem(item.id);
+	}
 </script>
 
 <div class="checklist-item" style="--indent-level: {level};">
@@ -54,12 +61,19 @@
 			</span>
 		</label>
 
-		{#if showAddSubItem && !isAddingSubItem}
-			<button onclick={handleAddSubItemClick} class="add-subitem-button" aria-label="Add sub-item">
-				<span class="button-icon">+</span>
-				<span class="button-text">Sub-item</span>
-			</button>
-		{/if}
+		<div class="item-actions">
+			<DeleteButton itemName={item.text} itemType="item" onDelete={handleDeleteItem} small={true} />
+
+			{#if showAddSubItem && !isAddingSubItem}
+				<button
+					onclick={handleAddSubItemClick}
+					class="add-subitem-button"
+					aria-label="Add sub-item"
+				>
+					<span class="button-icon">+</span>
+				</button>
+			{/if}
+		</div>
 	</div>
 
 	{#if isAddingSubItem}
@@ -77,6 +91,7 @@
 						{categoryId}
 						{toggleChecklistItemCompleted}
 						{addChecklistItem}
+						{deleteItem}
 						level={level + 1}
 						{showAddSubItem}
 					/>
@@ -88,21 +103,43 @@
 
 <style>
 	.checklist-item {
-		padding-left: calc(var(--indent-level) * var(--spacing-4));
-		margin-bottom: var(--spacing-2);
+		padding-left: calc(
+			var(--indent-level) * clamp(0.5rem, 2vw, 0.75rem)
+		); /* Fluid indent that scales with viewport */
+		margin-bottom: var(--item-spacing); /* Fluid spacing between items */
+		width: 100%;
+		min-width: 0; /* Ensure the item can shrink */
 	}
 
 	.item-row {
 		display: flex;
 		align-items: center;
 		justify-content: space-between;
-		padding: var(--spacing-2) var(--spacing-1);
+		padding: var(--spacing-2) var(--container-spacing);
 		border-radius: var(--border-radius-md);
 		transition: background-color var(--transition-duration-fast) var(--transition-timing-default);
+		min-height: var(--touch-target-size); /* Fluid touch target height */
+		width: 100%;
+		min-width: 0; /* Ensure content can shrink */
+	}
+
+	/* Active state for touch feedback */
+	.item-row:active {
+		background-color: var(--color-primary-50);
+	}
+
+	.item-actions {
+		display: flex;
+		align-items: center;
+		gap: var(--spacing-2);
+		opacity: 1; /* Always visible for better UX */
+		transition: opacity var(--transition-duration-fast) var(--transition-timing-default);
+		flex-shrink: 0; /* Prevent shrinking */
 	}
 
 	.item-row:hover {
-		background-color: var(--color-neutral-100);
+		background-color: var(--color-light-hover-bg);
+		color: var(--color-light-hover-text);
 	}
 
 	.item-label {
@@ -111,6 +148,12 @@
 		gap: var(--spacing-3);
 		cursor: pointer;
 		flex: 1;
+		min-height: var(--touch-target-size); /* Fluid touch target height */
+		padding: var(--spacing-1) 0;
+		min-width: 0; /* Ensure label can shrink */
+		word-break: break-word; /* Ensure text wraps properly */
+		overflow-wrap: break-word; /* Ensure long words break */
+		hyphens: auto; /* Enable hyphenation */
 	}
 
 	.item-text {
@@ -137,20 +180,31 @@
 		display: flex;
 		align-items: center;
 		gap: var(--spacing-1);
-		padding: var(--spacing-1) var(--spacing-2);
-		font-size: var(--font-size-xs);
+		padding: var(--spacing-2) var(--container-spacing);
+		font-size: var(--font-size-sm);
 		color: var(--color-text-secondary);
 		background-color: var(--color-neutral-100);
 		border: none;
 		border-radius: var(--border-radius-md);
 		transition:
 			background-color var(--transition-duration-fast) var(--transition-timing-default),
+			color var(--transition-duration-fast) var(--transition-timing-default),
 			transform var(--transition-duration-fast) var(--transition-timing-default);
+		min-height: var(--touch-target-size); /* Fluid touch target height */
+		touch-action: manipulation; /* Prevent double-tap zoom on mobile */
+		white-space: nowrap; /* Prevent text wrapping */
 	}
 
 	.add-subitem-button:hover {
-		background-color: var(--color-neutral-200);
+		background-color: var(--color-primary-100);
+		color: var(--color-primary-900);
 		transform: translateY(-1px);
+	}
+
+	/* Active state for touch feedback */
+	.add-subitem-button:active {
+		background-color: var(--color-primary-200);
+		transform: translateY(0);
 	}
 
 	.add-subitem-button:focus-visible {
@@ -178,22 +232,34 @@
 
 	/* Dark mode adjustments */
 	:global([data-theme='dark']) .item-row:hover {
-		background-color: var(--color-neutral-800);
+		background-color: var(--color-dark-hover-bg); /* Using our new custom hover color */
+		color: var(--color-dark-hover-text); /* Ensuring text is visible on hover */
 	}
 
 	:global([data-theme='dark']) .add-subitem-button {
 		background-color: var(--color-neutral-800);
+		color: var(--color-text-secondary); /* Improved text contrast */
 	}
 
 	:global([data-theme='dark']) .add-subitem-button:hover {
-		background-color: var(--color-neutral-700);
+		background-color: var(--color-primary-700); /* More visible hover state */
+		color: var(--color-neutral-50); /* Better text contrast on hover */
 	}
 
 	:global([data-theme='dark']) .essential {
-		color: var(--color-primary-300);
+		color: var(--color-primary-200); /* Lighter color for better contrast */
 	}
 
 	:global([data-theme='dark']) .essential.completed {
-		color: var(--color-primary-500);
+		color: var(--color-primary-400); /* Brighter color for completed essential items */
 	}
+
+	:global([data-theme='dark']) .completed {
+		color: var(--color-text-tertiary);
+		text-decoration: line-through;
+		opacity: 0.8; /* Slightly more visible than default */
+	}
+
+	/* We're using a fluid design approach instead of fixed breakpoints */
+	/* The component will automatically adapt to any screen width */
 </style>

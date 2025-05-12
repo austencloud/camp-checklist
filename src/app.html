@@ -4,6 +4,75 @@
 		<meta charset="utf-8" />
 		<link rel="icon" href="%sveltekit.assets%/favicon.png" />
 		<meta name="viewport" content="width=device-width, initial-scale=1" />
+
+		<!-- Critical CSS to prevent flash of unstyled content -->
+		<style>
+			:root {
+				--color-primary-50: #eef2ff;
+				--color-primary-100: #e0e7ff;
+				--color-primary-200: #c7d2fe;
+				--color-primary-300: #a5b4fc;
+				--color-primary-400: #818cf8;
+				--color-primary-500: #6366f1;
+				--color-primary-600: #4f46e5;
+				--color-primary-700: #4338ca;
+				--color-primary-800: #3730a3;
+				--color-primary-900: #312e81;
+				--color-primary-950: #1e1b4b;
+
+				--color-neutral-50: #f9fafb;
+				--color-neutral-100: #f3f4f6;
+				--color-neutral-200: #e5e7eb;
+				--color-neutral-300: #d1d5db;
+				--color-neutral-400: #9ca3af;
+				--color-neutral-500: #6b7280;
+				--color-neutral-600: #4b5563;
+				--color-neutral-700: #374151;
+				--color-neutral-800: #1f2937;
+				--color-neutral-900: #111827;
+				--color-neutral-950: #030712;
+			}
+
+			/* Light theme defaults */
+			:root {
+				--color-background: var(--color-neutral-50);
+				--color-surface: #ffffff;
+				--color-surface-elevated: #ffffff;
+				--color-text-primary: var(--color-neutral-900);
+				--color-light-header-bg: #e0e7ff;
+				--color-dark-header-bg: #1e1b4b;
+			}
+
+			/* Dark theme overrides */
+			[data-theme='dark'] {
+				--color-background: var(--color-neutral-950);
+				--color-surface: var(--color-neutral-900);
+				--color-surface-elevated: var(--color-neutral-800);
+				--color-text-primary: var(--color-neutral-50);
+			}
+
+			/* Base styles to prevent FOUC */
+			html,
+			body {
+				background-color: var(--color-background);
+				color: var(--color-text-primary);
+				transition: none !important;
+			}
+		</style>
+
+		<!-- Inline script to set theme before render -->
+		<script>
+			(function () {
+				// Get theme from localStorage or system preference
+				const storedTheme = localStorage.getItem('theme');
+				if (storedTheme) {
+					document.documentElement.setAttribute('data-theme', storedTheme);
+				} else {
+					const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+					document.documentElement.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
+				}
+			})();
+		</script>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
