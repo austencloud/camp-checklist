@@ -1,0 +1,252 @@
+/* 
+  Animation and Transition Utilities
+  Reusable animation classes for the Camping Checklist App
+*/
+
+/* Checkbox animations */
+@keyframes checkbox-check {
+  0% {
+    transform: scale(0.8);
+    opacity: 0.5;
+  }
+  50% {
+    transform: scale(1.1);
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+.checkbox-animate {
+  animation: checkbox-check var(--transition-duration-normal) var(--transition-timing-out);
+}
+
+/* Fade animations */
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes fade-out {
+  from {
+    opacity: 1;
+  }
+  to {
+    opacity: 0;
+  }
+}
+
+.fade-in {
+  animation: fade-in var(--transition-duration-normal) var(--transition-timing-out);
+}
+
+.fade-out {
+  animation: fade-out var(--transition-duration-normal) var(--transition-timing-in);
+}
+
+/* Slide animations */
+@keyframes slide-in-right {
+  from {
+    transform: translateX(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-left {
+  from {
+    transform: translateX(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-up {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slide-in-down {
+  from {
+    transform: translateY(-20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
+}
+
+.slide-in-right {
+  animation: slide-in-right var(--transition-duration-normal) var(--transition-timing-out);
+}
+
+.slide-in-left {
+  animation: slide-in-left var(--transition-duration-normal) var(--transition-timing-out);
+}
+
+.slide-in-up {
+  animation: slide-in-up var(--transition-duration-normal) var(--transition-timing-out);
+}
+
+.slide-in-down {
+  animation: slide-in-down var(--transition-duration-normal) var(--transition-timing-out);
+}
+
+/* Scale animations */
+@keyframes scale-in {
+  from {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes scale-out {
+  from {
+    transform: scale(1);
+    opacity: 1;
+  }
+  to {
+    transform: scale(0.95);
+    opacity: 0;
+  }
+}
+
+.scale-in {
+  animation: scale-in var(--transition-duration-normal) var(--transition-timing-out);
+}
+
+.scale-out {
+  animation: scale-out var(--transition-duration-normal) var(--transition-timing-in);
+}
+
+/* Pulse animation for feedback */
+@keyframes pulse {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+.pulse {
+  animation: pulse var(--transition-duration-normal) var(--transition-timing-default);
+}
+
+/* Shake animation for error feedback */
+@keyframes shake {
+  0%, 100% {
+    transform: translateX(0);
+  }
+  20%, 60% {
+    transform: translateX(-5px);
+  }
+  40%, 80% {
+    transform: translateX(5px);
+  }
+}
+
+.shake {
+  animation: shake var(--transition-duration-normal) var(--transition-timing-default);
+}
+
+/* Transition utilities */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: var(--transition-timing-default);
+  transition-duration: var(--transition-duration-normal);
+}
+
+.transition-colors {
+  transition-property: color, background-color, border-color, text-decoration-color, fill, stroke;
+  transition-timing-function: var(--transition-timing-default);
+  transition-duration: var(--transition-duration-normal);
+}
+
+.transition-opacity {
+  transition-property: opacity;
+  transition-timing-function: var(--transition-timing-default);
+  transition-duration: var(--transition-duration-normal);
+}
+
+.transition-transform {
+  transition-property: transform;
+  transition-timing-function: var(--transition-timing-default);
+  transition-duration: var(--transition-duration-normal);
+}
+
+/* Duration modifiers */
+.duration-fast {
+  transition-duration: var(--transition-duration-fast);
+}
+
+.duration-normal {
+  transition-duration: var(--transition-duration-normal);
+}
+
+.duration-slow {
+  transition-duration: var(--transition-duration-slow);
+}
+
+/* Timing function modifiers */
+.ease-default {
+  transition-timing-function: var(--transition-timing-default);
+}
+
+.ease-in {
+  transition-timing-function: var(--transition-timing-in);
+}
+
+.ease-out {
+  transition-timing-function: var(--transition-timing-out);
+}
+
+/* Hover effect utilities */
+.hover-scale {
+  transition: transform var(--transition-duration-fast) var(--transition-timing-out);
+}
+
+.hover-scale:hover {
+  transform: scale(1.03);
+}
+
+.hover-elevate {
+  transition: box-shadow var(--transition-duration-fast) var(--transition-timing-out),
+              transform var(--transition-duration-fast) var(--transition-timing-out);
+}
+
+.hover-elevate:hover {
+  transform: translateY(-2px);
+  box-shadow: var(--shadow-md);
+}
+
+/* Focus visible styles for accessibility */
+.focus-outline:focus-visible {
+  outline: 2px solid var(--color-primary-500);
+  outline-offset: 2px;
+}
