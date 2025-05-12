@@ -1,12 +1,13 @@
 <script lang="ts">
-	import type { Category } from '../types';
-	import { addChecklistItem } from '../store.svelte';
+	import type { Category } from '../types.js';
 	import ChecklistItem from './ChecklistItem.svelte';
 	import AddItemForm from './AddItemForm.svelte';
 
 	// Props
-	let { category } = $props<{
+	let { category, addChecklistItem, toggleChecklistItemCompleted } = $props<{
 		category: Category;
+		addChecklistItem: (categoryId: string, text: string, parentItemId?: string) => void;
+		toggleChecklistItemCompleted: (itemId: string) => void;
 	}>();
 
 	// Methods
@@ -20,7 +21,13 @@
 
 	<div class="space-y-1">
 		{#each category.items as item}
-			<ChecklistItem {item} categoryId={category.id} showAddSubItem={true} />
+			<ChecklistItem
+				{item}
+				categoryId={category.id}
+				{addChecklistItem}
+				{toggleChecklistItemCompleted}
+				showAddSubItem={true}
+			/>
 		{/each}
 	</div>
 

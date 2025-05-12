@@ -1,7 +1,14 @@
 <script lang="ts">
-	import { todoItems, addTodoItem } from '../store.svelte';
+	import type { TodoItem as TodoItemType } from '../types.js';
 	import TodoItem from './TodoItem.svelte';
 	import AddItemForm from './AddItemForm.svelte';
+
+	// Props
+	let { todoItems, toggleTodoItemCompleted, addTodoItem } = $props<{
+		todoItems: TodoItemType[];
+		toggleTodoItemCompleted: (id: string) => void;
+		addTodoItem: (text: string) => void;
+	}>();
 
 	// Methods
 	function handleAddTodo(text: string) {
@@ -14,7 +21,7 @@
 
 	<div class="space-y-1">
 		{#each todoItems as todo}
-			<TodoItem {todo} />
+			<TodoItem {todo} {toggleTodoItemCompleted} />
 		{/each}
 	</div>
 

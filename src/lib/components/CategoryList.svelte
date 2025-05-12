@@ -1,7 +1,15 @@
 <script lang="ts">
-	import { categories, addCategory } from '../store.svelte';
+	import type { Category as CategoryType } from '../types.js';
 	import Category from './Category.svelte';
 	import AddItemForm from './AddItemForm.svelte';
+
+	// Props
+	let { categories, addCategory, addChecklistItem, toggleChecklistItemCompleted } = $props<{
+		categories: CategoryType[];
+		addCategory: (name: string) => void;
+		addChecklistItem: (categoryId: string, text: string, parentItemId?: string) => void;
+		toggleChecklistItemCompleted: (itemId: string) => void;
+	}>();
 
 	// Methods
 	function handleAddCategory(name: string) {
@@ -14,7 +22,7 @@
 
 	<div class="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
 		{#each categories as category}
-			<Category {category} />
+			<Category {category} {addChecklistItem} {toggleChecklistItemCompleted} />
 		{/each}
 	</div>
 

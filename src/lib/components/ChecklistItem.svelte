@@ -1,17 +1,22 @@
 <script lang="ts">
-	import type { ChecklistItem } from '../types';
-	import { toggleChecklistItemCompleted, addChecklistItem } from '../store.svelte';
+	import type { ChecklistItem } from '../types.js';
 	import AddItemForm from './AddItemForm.svelte';
+	// Self-import for recursive rendering (replacing svelte:self)
+	import Self from './ChecklistItem.svelte';
 
 	// Props
 	let {
 		item,
 		categoryId,
+		toggleChecklistItemCompleted,
+		addChecklistItem,
 		level = 0,
 		showAddSubItem = false
 	} = $props<{
 		item: ChecklistItem;
 		categoryId: string;
+		toggleChecklistItemCompleted: (itemId: string) => void;
+		addChecklistItem: (categoryId: string, text: string, parentItemId?: string) => void;
 		level?: number;
 		showAddSubItem?: boolean;
 	}>();
@@ -24,6 +29,14 @@
 		addChecklistItem(categoryId, text, item.id);
 		isAddingSubItem = false;
 	}
+
+	function handleToggleCompleted() {
+		toggleChecklistItemCompleted(item.id);
+	}
+
+	function handleAddSubItemClick() {
+		isAddingSubItem = true;
+	}
 </script>
 
 <div class="pl-{level * 4} py-1">
@@ -31,7 +44,7 @@
 		<input
 			type="checkbox"
 			checked={item.completed}
-			on:change={() => toggleChecklistItemCompleted(item.id)}
+			onchange={handleToggleCompleted}
 			class="h-5 w-5"
 		/>
 		<span
@@ -43,7 +56,7 @@
 
 		{#if showAddSubItem && !isAddingSubItem}
 			<button
-				on:click={() => (isAddingSubItem = true)}
+				onclick={handleAddSubItemClick}
 				class="ml-2 rounded bg-gray-200 px-2 py-1 text-xs hover:bg-gray-300"
 			>
 				+ Sub-item
@@ -60,7 +73,14 @@
 	{#if item.subItems && item.subItems.length > 0}
 		<div class="pl-4">
 			{#each item.subItems as subItem}
-				<svelte:self item={subItem} {categoryId} level={level + 1} {showAddSubItem} />
+				<Self
+					item={subItem}
+					{categoryId}
+					{toggleChecklistItemCompleted}
+					{addChecklistItem}
+					level={level + 1}
+					{showAddSubItem}
+				/>
 			{/each}
 		</div>
 	{/if}

@@ -1,18 +1,22 @@
 <script lang="ts">
-	import type { TodoItem } from '../types';
-	import { toggleTodoItemCompleted } from '../store.svelte';
+	import type { TodoItem } from '../types.js';
 
 	// Props
-	let { todo } = $props<{
+	let { todo, toggleTodoItemCompleted } = $props<{
 		todo: TodoItem;
+		toggleTodoItemCompleted: (id: string) => void;
 	}>();
+
+	function handleToggleCompleted() {
+		toggleTodoItemCompleted(todo.id);
+	}
 </script>
 
 <div class="flex items-center gap-2 py-2">
 	<input
 		type="checkbox"
 		checked={todo.completed}
-		on:change={() => toggleTodoItemCompleted(todo.id)}
+		onchange={handleToggleCompleted}
 		class="h-5 w-5"
 	/>
 	<span class={todo.completed ? 'text-gray-500 line-through' : ''}>
